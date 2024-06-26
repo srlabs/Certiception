@@ -108,7 +108,7 @@ You are responsible for all installation and configuration steps performed by Ce
 If you use this tool, we strongly recommend you read the source code to understand what you configure and verify your setup after installation.
 
 Additionally, we recommend considering the following:
-1. At the time of release the tool was not scrutinized by the community yet - expect safety imnprovements over time.
+1. At the time of release the tool was not scrutinized by the community yet - expect safety improvements over time.
 2. An ADCS honeypot only makes sense if the PKI team takes up the ownership for it. When performing configuration changes, the implications on the honeypot need to be considered. E.g. when migrating the honey CA to a new server without also migrating the policy module, the honey template becomes exploitable.
 3. Besides the honey template, your honey CA should be secured, hardened and managed like any other ADCS CA in your network
 4. The CA set up by this tool is a plain CA with the CA certificate stored on disk and no HSM
@@ -118,7 +118,7 @@ Additionally, we recommend considering the following:
 
 * Support placing honey templates on existing CAs
 * Implement support for more ESC misconfigurations (e.g. ESC3 and ESC8)
-* Implement additional hardening options against exploitation
+* Implement additional safeguards and hardening options to prevent things going wrong
 * Use lower privilege accounts instead of enterprise admin
 * Add less suspicious error message on denied CSRs
 * Investigate and mitigate ways of fingerprinting Certiception
