@@ -122,7 +122,8 @@ Additionally, we recommend considering the following:
 * Use lower privilege accounts instead of enterprise admin
 * Add less suspicious error message on denied CSRs
 * Investigate and mitigate ways of fingerprinting Certiception
-* Strengthen continuous monitoring intended to catch and mitigate insecure configurations 
+* Strengthen continuous monitoring intended to catch and mitigate insecure configurations
+* Hardening of the installation script (e.g. investigate credential exposure of the used accounts)
 
 ## License
 
