@@ -46,7 +46,7 @@ It is implemented as an Ansible playbook calling multiple roles. Overall, the fo
 * Install and configure the [TameMyCerts](https://github.com/Sleepw4lker/TameMyCerts) policy module to prevent issuance if certificate signing requests contain a SAN
 * Enable extended audit log to include template names in event logs
 * Print a SIGMA rule to set up alerting in your SIEM
-* Set up continuous checks with [Certify](https://github.com/GhostPack/Certify) to catch any other CA enabling the vulnerable template
+* Set up continuous checks with [Certify](https://github.com/GhostPack/Certify) to catch any other CA enabling the vulnerable template (not pushed yet, will be added to the repo in the next days)
 
 Parameters like the CA or template name can be customized to disguise the honeypot.
 
