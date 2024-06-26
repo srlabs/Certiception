@@ -89,12 +89,12 @@ Follow these steps to set up your ADCS honeypot.
 
 ### Installing Certiception
 
-1. Configure Ansible to access your CA host via `inventory.yml`
+1. Configure your general Domain and Ansible connection parameters in `inventory`
 2. Customize parameters for your honeypot in `host_vars/honeypotCA.yml`
 3. Create EDR exception for future Certify location (used for monitoring if any non-honey CAs enable the vulnerable template, not required yet as Certify-based monitoring it not yet published)
 4. Run Certiception Ansible playbook
 ```bash
-ansible-playbook -i inventory.yml playbooks/certiception.yml
+ansible-playbook -i inventory playbooks/certiception.yml
 ```
 4. Onboard the server's event logs to your SIEM and configure alerts with the printed SIGMA rules
 5. Verify and manually test your setup
