@@ -51,8 +51,8 @@
   vars:
     ansible_become: yes
     ansible_become_method: runas
-    ansible_become_user: "{{ ansible_user }}"
-    ansible_become_password: "{{ ansible_password }}"
+    ansible_become_user: "{{ ea_admin }}@{{ domain_fqdn }}"
+    ansible_become_password: "{{ ea_admin_password }}"
 
 - name: Remove setup files
   ansible.windows.win_file:
