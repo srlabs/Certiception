@@ -1,0 +1,26 @@
+priority: 99
+title: Attempted exploitation of ADCS ESC1 honeypot template
+description: detects scenarios where an attacker is attempting to abuse the ESC1 misconfiguration in an ADCS certificate template for privilege escalation by supplying a SAN in the CSR
+requirements: ensure that the ADCS honeypot and the associated templates are well documented and maintained, do not create any breach and cannot be used against your organization
+references: 
+- https://github.com/srlabs/Certiception
+- https://www.labofapenetrationtester.com/2018/10/deploy-deception.html
+tags: 
+- attack.lateral_movement
+- attack.t1649
+id: 133758c3-b090-4b94-91a2-20e8f40a5a8f
+author: niklasvandornick
+status: experimental
+logsource: 
+  product: windows
+  service: application
+detection: 
+  selection: 
+    ComputerName: {{ computer_fqdn }}
+    EventID: 6
+    Provider_Name: TameMyCerts
+    param1|contains: {{ template_name }}
+  condition: selection
+falsepositives: 
+- pentest
+level: critical

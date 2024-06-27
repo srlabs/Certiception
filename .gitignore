@@ -1,0 +1,3 @@
+roles/setup_esc1_honeypot/files/tmp
+roles/ca_server/files/tmp
+*.sigma.yml

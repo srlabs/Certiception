@@ -1,0 +1,22 @@
+# parameters depending on your domain
+ea_admin: Vagrant
+domain_fqdn: mydomain.local
+domain_controller_ip: 192.168.56.113
+domain_netbios_name: mydomain
+
+# Parameters depending on your future CA host
+ansible_host: 192.168.56.238
+ansible_user: Administrator # needs to be local admin on future honey CA server
+computer_fqdn: honeypotCA.mydomain.local
+
+# parameters to customize your CA and template
+ca_name: my-honeypot-CA
+template_name: ESC1HoneypotTemplate
+
+# Future improvement:
+# Due to the Template setup script used, currently the display name is always set to the template name
+# template_display_name: ESC1HoneypotTemplate
+
+# For future vulnerability detection support
+# vuln_detector_account_name: ServiceAccount
+# local_admin_name: Administrator

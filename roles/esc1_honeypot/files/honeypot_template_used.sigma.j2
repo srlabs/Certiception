@@ -1,0 +1,26 @@
+priority: 50
+title: Enrollment attempt with ADCS ESC1 honeypot template
+description: detects scenarios where an ESC1 honeypot template is used in a CSR for an ADCS certificate authority
+requirements: ensure that the ADCS honeypot and the associated templates are well documented and maintained, do not create any breach and cannot be used against your organization
+references: 
+- https://github.com/srlabs/Certiception
+- https://www.labofapenetrationtester.com/2018/10/deploy-deception.html
+tags: 
+- attack.lateral_movement
+- attack.t1649
+id: 13379b24-7577-46b0-b492-719a40fa0df8
+author: niklasvandornick
+status: experimental
+logsource: 
+  product: windows
+  service: security
+detection: 
+  selection: 
+    ComputerName: {{ computer_fqdn }}
+    EventID: 4886
+    Provider_Name: Microsoft-Windows-Security-Auditing
+    CertificateTemplate: {{ template_name }}
+  condition: selection
+falsepositives: 
+- pentest
+level: medium

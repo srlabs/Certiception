@@ -1,0 +1,72 @@
+- name: Create a directory to store the raw certificate template and policy module files
+  win_file:
+    path: C:\Esc1Honeypot
+    state: directory
+
+- name: Create a directory to store the policies
+  win_file:
+    path: C:\policies
+    state: directory
+
+- name: Download TameMyCert release
+  delegate_to: localhost
+  ansible.builtin.get_url:
+    url: "https://github.com/Sleepw4lker/TameMyCerts/releases/download/1.6.1045.1129/TameMyCerts_community_1.6.1045.1129.zip"
+    dest: "{{role_path}}/files/tmp/TameMyCerts_community_1.6.1045.1129.zip"
+
+- name: Copy the TameMyCerts release file to windows host
+  win_copy:
+    src: "files/tmp/TameMyCerts_community_1.6.1045.1129.zip"
+    dest: "C:\\Esc1Honeypot\\TameMyCerts_community_1.6.1045.1129.zip"
+
+- name: Unzip TameMyCerts release file
+  ansible.windows.win_powershell:
+    script: "Expand-Archive -LiteralPath 'C:\\Esc1Honeypot\\TameMyCerts_community_1.6.1045.1129.zip' -DestinationPath C:\\Esc1Honeypot"
+
+- name: Copy the xml policy definition 
+  win_copy:
+    src: "files/policy.xml"
+    dest: "C:\\policies\\{{template_name}}.xml"
+
+- name: Install TameMyCerts policy module
+  ansible.windows.win_shell: "C:\\Esc1Honeypot\\install.ps1 -PolicyDirectory C:\\policies"
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ea_admin }}@{{ domain_fqdn }}"
+    ansible_become_password: "{{ ea_admin_password }}"
+
+- name: Copy template to remote
+  template:
+    src: "files/Esc1Honeypot.json"
+    dest: "C:\\Esc1Honeypot\\Esc1Honeypot.json"
+
+- name: Install the certificate template
+  ansible.windows.win_powershell:
+    # replaces names defined in Esc1Honeypot.json
+    script: |
+      if (-not(Get-ADCSTemplate -DisplayName "{{template_name}}")) {
+        New-ADCSTemplate -DisplayName {{ template_name }} -JSON (Get-Content C:\Esc1Honeypot\Esc1Honeypot.json -Raw) -Identity "{{ domain_netbios_name }}\Domain Users" -PublishOn {{ca_name}}
+      }
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_password: "{{ ansible_password }}"
+
+- name: Remove setup files
+  ansible.windows.win_file:
+    path: C:\Esc1Honeypot
+    state: absent
+  
+- name: Create custom SIGMA rule for medium severity alert
+  delegate_to: localhost
+  ansible.builtin.template:
+     src: "{{ role_path }}/files/honeypot_template_used.sigma.j2"
+     dest: "{{ role_path }}/../../honeypot_template_used.sigma.yml"
+
+- name: Create custom SIGMA rule for critical severity alert
+  delegate_to: localhost
+  ansible.builtin.template:
+     src: "{{ role_path }}/files/honeypot_template_used_with_san.sigma.j2"
+     dest: "{{ role_path }}/../../honeypot_template_used_with_san.sigma.yml"

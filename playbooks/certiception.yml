@@ -1,0 +1,19 @@
+- name: Apply roles required for ADCS honeypot
+  vars_prompt:
+  - name: ea_admin_password
+    prompt: Please provide the password for the configured Enterprise Admin account (needed to register the new CA)
+    unsafe: true # to allow special chars in password
+    private: true
+  - name: ansible_password
+    prompt: Please provide the password for the become user (local admin) on the honeypot CA server
+    unsafe: true # to allow special chars in password
+    private: true
+  hosts: all
+  vars_files:
+    - ../host_vars/honeypotCA.yml
+  roles:
+    - role: ../roles/ca_server
+    - role: ../roles/esc1_honeypot
+
+# Not fully implemented yet, to be added soon
+#    - role: ../roles/vuln_detector

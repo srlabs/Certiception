@@ -1,0 +1,49 @@
+- name: Install ADCS Role (takes a moment...)
+  win_feature:
+    name: AD-Certificate
+    state: present
+    include_sub_features: yes
+    include_management_tools: yes
+  register: win_features
+
+- name: Install Cert Authority role
+  win_feature:
+    name: ADCS-Cert-Authority
+    state: present
+    include_management_tools: yes
+
+- name: Install Certification Authority role
+  ansible.windows.win_powershell:
+    script: |
+      $AdministratorPassword = ConvertTo-SecureString "{{ domain_password }}" -AsPlainText -Force
+      $PSCredential = New-Object System.Management.Automation.PSCredential ("{{ domain_username }}", $AdministratorPassword)
+      Install-AdcsCertificationAuthority -Credential $PSCredential -CAType EnterpriseRootCA -CryptoProviderName "RSA#Microsoft Software Key Storage Provider" -KeyLength 2048 -HashAlgorithmName SHA256 -ValidityPeriod Years -ValidityPeriodUnits 5 -CACommonName "{{ ca_common_name }}" -Force
+  vars:
+    domain_username: "{{ ea_admin }}@{{ domain_fqdn }}"
+    domain_password: "{{ ea_admin_password }}"
+    ca_common_name: "{{ ca_name }}"
+
+# is a dependency of the ADCSTemplate PowerShell Module 
+- name: Install ActiveDirectory PowerShell Module
+  ansible.windows.win_powershell:
+    script: Install-WindowsFeature -Name RSAT-AD-Tools
+
+- name: Clone ADCSTemplate repo
+  delegate_to: localhost
+  ansible.builtin.git:
+    repo: "https://github.com/balthasar-m/ADCSTemplate"
+    dest: "{{role_path}}/files/tmp/ADCSTemplate"
+
+- name: Install ADCSTemplate PowerShell Module
+  win_copy:
+    src: files/tmp/ADCSTemplate
+    dest: "C:\\Program Files\\WindowsPowerShell\\Modules"
+
+- name: Enable extended audit events for ADCS templates
+  ansible.windows.win_powershell:
+    script: certutil -setreg policy\EditFlags +EDITF_AUDITCERTTEMPLATELOAD
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ea_admin }}@{{ domain_fqdn }}"
+    ansible_become_password: "{{ ea_admin_password }}"
