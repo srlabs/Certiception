@@ -10,8 +10,6 @@ Originally released at [Troopers24](https://troopers.de/troopers24/talks/8fjh87/
 
 ![Certiception from an attacker's perspective](./documentation/images/how_attackers_see_it.png)
 
-fyi, we are still improving the stability in different test lab setups with regards to what accounts are used for the setup tasks. If you wanna try it out, probably best to wait a week more :)
-
 ## Background
 
 In our Red Team and Incident Management engagements we regularly observe that lateral movement and privilege escalation go undetected.
@@ -90,6 +88,8 @@ Follow these steps to set up your ADCS honeypot.
 * **Basic Domain account** without any privileges to execute continuous Certify checks
 
 ### Installing Certiception
+
+Note: we are still improving the stability in different test lab setups with regards to what accounts are used for the setup tasks. If you want try it out, probably best to wait a week more :)
 
 1. Configure your general Domain and Ansible connection parameters in `inventory`
 2. Customize parameters for your honeypot in `host_vars/honeypotCA.yml`
